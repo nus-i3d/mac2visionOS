@@ -21,6 +21,20 @@ final class BubbleHostModel: ObservableObject {
     private var listener: NWListener?
     private var connections: [UUID: BubblePeerConnection] = [:]
     private var clientHelloByConnectionID: [UUID: BubblePeerHello] = [:]
+    private var didApplyLaunchAutomation = false
+
+    func applyLaunchAutomationIfNeeded() {
+        guard !didApplyLaunchAutomation else { return }
+        didApplyLaunchAutomation = true
+
+        guard let key = BubbleLaunchArguments.value(after: BubbleLaunchArguments.smokeHostFlag) else {
+            return
+        }
+
+        groupKey = key
+        appendDiagnostic("Launch automation: starting smoke host for \(key)")
+        start()
+    }
 
     func start() {
         stop()
@@ -185,6 +199,7 @@ final class BubbleHostModel: ObservableObject {
     }
 
     private func appendDiagnostic(_ message: String) {
+        print("[BubbleHost] \(message)")
         diagnostics.insert(message, at: 0)
         diagnostics = Array(diagnostics.prefix(80))
     }

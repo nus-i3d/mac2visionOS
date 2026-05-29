@@ -63,6 +63,9 @@ struct BubbleHostView: View {
                 }
             }
             .navigationTitle("Vision Bubble Host")
+            .task {
+                model.applyLaunchAutomationIfNeeded()
+            }
         }
     }
 }

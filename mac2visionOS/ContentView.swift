@@ -12,7 +12,11 @@ struct ContentView: View {
         #if os(visionOS)
         BubbleHostView()
         #elseif os(macOS)
-        BubbleControllerView()
+        if let key = BubbleLaunchArguments.value(after: BubbleLaunchArguments.smokeClientFlag) {
+            BubbleSmokeClientView(groupKey: key)
+        } else {
+            BubbleControllerView()
+        }
         #else
         Text("Run this prototype on macOS or visionOS.")
             .padding()

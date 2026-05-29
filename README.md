@@ -123,6 +123,36 @@ Expected result:
 
 This check proves one local listener can receive commands from four local clients and return four acknowledgements. It does not replace a physical 4-MacBook + 1-AVP network test.
 
+### 7. Run the Simulator Smoke Check
+
+The app also supports launch arguments for a repeatable simulator check. This starts the Vision Pro simulator as the Bonjour host and runs the macOS app as a client that exits after receiving an acknowledgement.
+
+Launch the Vision Pro simulator host with a 4-character key:
+
+```sh
+xcrun simctl launch <DEVICE_ID> com.i3d.mac2visionOS \
+  --bubble-smoke-host AVP1
+```
+
+Run one macOS smoke client and capture its output:
+
+```sh
+open -W -n .DerivedData/Build/Products/Debug/mac2visionOS.app \
+  --stdout /private/tmp/mac2vision-smoke.out \
+  --stderr /private/tmp/mac2vision-smoke.err \
+  --args --bubble-smoke-client AVP1
+```
+
+Expected output includes:
+
+```text
+[BubbleSmoke] Found mac2visionOS-AVP1; connecting
+[BubbleSmoke] Decoded ack(true, Accepted Ping)
+[BubbleSmoke] Smoke connection passed: Accepted Ping
+```
+
+To approximate four Mac controllers from one development Mac, launch four smoke clients with separate output files at the same time. Each client should report `Smoke connection passed: Accepted Ping`.
+
 ## Runtime Diagnostics
 
 The app surfaces runtime diagnostics in the UI. Use those first for:
@@ -172,4 +202,3 @@ log stream \
 - The project currently has no configured test target/action, so `xcodebuild test` reports that the scheme is not configured for testing.
 - Some automation environments cannot access CoreSimulator from a sandbox. If `simctl` or direct simulator `xcodebuild` commands fail with CoreSimulator connection errors, rerun them with the needed host permissions or perform the simulator steps manually in Xcode.
 - Leave unrelated Xcode user/scheme metadata unstaged unless intentionally changing scheme configuration.
-
