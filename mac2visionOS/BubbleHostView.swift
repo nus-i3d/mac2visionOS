@@ -16,9 +16,12 @@ struct BubbleHostView: View {
                         Button("Start Hosting") {
                             model.start()
                         }
+                        .buttonStyle(.borderedProminent)
+
                         Button("Stop") {
                             model.stop()
                         }
+                        .buttonStyle(.bordered)
                     }
                 }
 
