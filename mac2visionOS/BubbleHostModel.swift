@@ -147,6 +147,13 @@ final class BubbleHostModel: ObservableObject {
             updateClient(peerID: peer.id, displayName: hello.displayName)
             receivedCommands.insert("\(hello.displayName) joined \(hello.groupKey)", at: 0)
             appendDiagnostic("Registered controller \(hello.displayName) for \(hello.groupKey)")
+            peer.send(.acknowledgement(BubbleAcknowledgement(
+                id: UUID(),
+                messageID: hello.id,
+                accepted: true,
+                detail: "Accepted \(hello.displayName)",
+                sentAt: Date()
+            )))
 
         case .command(let command):
             let sender = clientHelloByConnectionID[peer.id]?.displayName ?? command.senderID.uuidString

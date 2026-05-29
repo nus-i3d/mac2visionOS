@@ -178,8 +178,9 @@ final class BubbleControllerModel: ObservableObject {
             status = "Preparing"
         case .ready:
             status = "Connected"
-            appendDiagnostic("Connected; sending hello")
+            appendDiagnostic("Connected; sending hello and ping")
             sendHello()
+            send(.ping)
         case .failed(let error):
             status = "Connection failed: \(error.localizedDescription)"
             connection = nil
