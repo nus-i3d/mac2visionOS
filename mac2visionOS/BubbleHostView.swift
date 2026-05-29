@@ -44,8 +44,8 @@ struct BubbleHostView: View {
                         Text("No commands received")
                             .foregroundStyle(.secondary)
                     } else {
-                        ForEach(model.receivedCommands, id: \.self) { command in
-                            Text(command)
+                        ForEach(model.receivedCommands.indices, id: \.self) { index in
+                            Text(model.receivedCommands[index])
                         }
                     }
                 }
@@ -55,8 +55,8 @@ struct BubbleHostView: View {
                         Text("No diagnostics")
                             .foregroundStyle(.secondary)
                     } else {
-                        ForEach(model.diagnostics, id: \.self) { event in
-                            Text(event)
+                        ForEach(model.diagnostics.indices, id: \.self) { index in
+                            Text(model.diagnostics[index])
                                 .font(.caption)
                         }
                     }

@@ -74,14 +74,14 @@ struct BubbleControllerView: View {
 
                 Text("Log")
                     .font(.headline)
-                List(model.log, id: \.self) { entry in
-                    Text(entry)
+                List(model.log.indices, id: \.self) { index in
+                    Text(model.log[index])
                 }
 
                 Text("Diagnostics")
                     .font(.headline)
-                List(model.diagnostics, id: \.self) { entry in
-                    Text(entry)
+                List(model.diagnostics.indices, id: \.self) { index in
+                    Text(model.diagnostics[index])
                         .font(.caption)
                 }
             }

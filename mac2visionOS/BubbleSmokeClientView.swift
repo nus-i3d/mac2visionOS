@@ -15,8 +15,8 @@ struct BubbleSmokeClientView: View {
             Text(model.status)
                 .foregroundStyle(.secondary)
 
-            List(model.events, id: \.self) { event in
-                Text(event)
+            List(model.events.indices, id: \.self) { index in
+                Text(model.events[index])
                     .font(.caption)
             }
         }
@@ -28,4 +28,3 @@ struct BubbleSmokeClientView: View {
     }
 }
 #endif
-
