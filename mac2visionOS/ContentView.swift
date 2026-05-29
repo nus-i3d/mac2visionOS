@@ -9,16 +9,13 @@ import SwiftUI
 
 struct ContentView: View {
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
-        }
-        .padding()
+        #if os(visionOS)
+        BubbleHostView()
+        #elseif os(macOS)
+        BubbleControllerView()
+        #else
+        Text("Run this prototype on macOS or visionOS.")
+            .padding()
+        #endif
     }
-}
-
-#Preview {
-    ContentView()
 }
