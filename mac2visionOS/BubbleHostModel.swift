@@ -22,6 +22,9 @@ final class BubbleHostModel: ObservableObject {
     private var connections: [UUID: BubblePeerConnection] = [:]
     private var clientHelloByConnectionID: [UUID: BubblePeerHello] = [:]
     private var didApplyLaunchAutomation = false
+    private var desiredHostKey: String?
+    private var listenerID: UUID?
+    private var restartTask: Task<Void, Never>?
 
     func applyLaunchAutomationIfNeeded() {
         guard !didApplyLaunchAutomation else { return }
@@ -37,20 +40,36 @@ final class BubbleHostModel: ObservableObject {
     }
 
     func start() {
-        stop()
-
         let key = BubbleProtocol.normalizedKey(groupKey)
         groupKey = key
 
         guard BubbleProtocol.isValidKey(key) else {
+            desiredHostKey = nil
             status = "Enter a 4-character key"
             appendDiagnostic("Rejected host start: invalid key")
             return
         }
 
+        desiredHostKey = key
+        restartTask?.cancel()
+        restartTask = nil
+        startListener(for: key)
+    }
+
+    func stop() {
+        desiredHostKey = nil
+        restartTask?.cancel()
+        restartTask = nil
+        stopActiveHost(status: "Stopped", diagnostic: "Stopped host")
+    }
+
+    private func startListener(for key: String) {
+        stopActiveHost(status: "Restarting", diagnostic: nil)
+
         do {
             let listener = try NWListener(using: .tcp)
             let serviceName = BubbleProtocol.serviceName(for: key)
+            let listenerID = UUID()
             listener.service = NWListener.Service(
                 name: serviceName,
                 type: BubbleProtocol.serviceType
@@ -62,27 +81,32 @@ final class BubbleHostModel: ObservableObject {
             }
             listener.stateUpdateHandler = { [weak self] state in
                 Task { @MainActor [weak self] in
-                    self?.updateListenerState(state)
+                    self?.updateListenerState(state, listenerID: listenerID)
                 }
             }
             self.listener = listener
+            self.listenerID = listenerID
             appendDiagnostic("Starting listener \(serviceName) \(BubbleProtocol.serviceType)")
             listener.start(queue: .global(qos: .userInitiated))
         } catch {
             status = "Failed: \(error.localizedDescription)"
             appendDiagnostic("Listener start failed: \(error.localizedDescription)")
+            scheduleRestartIfNeeded()
         }
     }
 
-    func stop() {
+    private func stopActiveHost(status: String, diagnostic: String?) {
         listener?.cancel()
         listener = nil
+        listenerID = nil
         connections.values.forEach { $0.cancel() }
         connections.removeAll()
         clientHelloByConnectionID.removeAll()
         clients.removeAll()
-        status = "Stopped"
-        appendDiagnostic("Stopped host")
+        self.status = status
+        if let diagnostic {
+            appendDiagnostic(diagnostic)
+        }
     }
 
     private func accept(_ connection: NWConnection) {
@@ -144,22 +168,50 @@ final class BubbleHostModel: ObservableObject {
         }
     }
 
-    private func updateListenerState(_ state: NWListener.State) {
+    private func updateListenerState(_ state: NWListener.State, listenerID: UUID) {
+        guard listenerID == self.listenerID else {
+            appendDiagnostic("Ignored stale listener state: \(state.eventDescription)")
+            return
+        }
+
         switch state {
         case .setup:
             status = "Setting up"
         case .waiting(let error):
             status = "Waiting: \(error.localizedDescription)"
+            appendDiagnostic(status)
+            scheduleRestartIfNeeded()
         case .ready:
             status = "Hosting \(BubbleProtocol.serviceName(for: groupKey))"
             appendDiagnostic(status)
         case .failed(let error):
             status = "Failed: \(error.localizedDescription)"
             appendDiagnostic(status)
+            scheduleRestartIfNeeded()
         case .cancelled:
-            status = "Stopped"
+            if desiredHostKey == nil {
+                status = "Stopped"
+            } else {
+                status = "Restarting host"
+                appendDiagnostic("Listener cancelled unexpectedly; scheduling restart")
+                scheduleRestartIfNeeded()
+            }
         @unknown default:
             status = "Unknown"
+        }
+    }
+
+    private func scheduleRestartIfNeeded() {
+        guard let key = desiredHostKey, BubbleProtocol.isValidKey(key) else { return }
+        guard restartTask == nil else { return }
+
+        restartTask = Task { @MainActor [weak self] in
+            try? await Task.sleep(nanoseconds: 1_000_000_000)
+            guard let self, !Task.isCancelled else { return }
+            self.restartTask = nil
+            guard self.desiredHostKey == key else { return }
+            self.appendDiagnostic("Restarting listener \(BubbleProtocol.serviceName(for: key))")
+            self.startListener(for: key)
         }
     }
 
@@ -202,6 +254,25 @@ final class BubbleHostModel: ObservableObject {
         print("[BubbleHost] \(message)")
         diagnostics.insert(message, at: 0)
         diagnostics = Array(diagnostics.prefix(80))
+    }
+}
+
+private extension NWListener.State {
+    var eventDescription: String {
+        switch self {
+        case .setup:
+            "setup"
+        case .waiting(let error):
+            "waiting(\(error.localizedDescription))"
+        case .ready:
+            "ready"
+        case .failed(let error):
+            "failed(\(error.localizedDescription))"
+        case .cancelled:
+            "cancelled"
+        @unknown default:
+            "unknown"
+        }
     }
 }
 #endif
