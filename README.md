@@ -153,6 +153,27 @@ Expected output includes:
 
 To approximate four Mac controllers from one development Mac, launch four smoke clients with separate output files at the same time. Each client should report `Smoke connection passed: Accepted Ping`.
 
+### 8. Run the Stability Check
+
+This variant keeps one Bonjour connection open and sends a sequence of pings to confirm the AVP simulator host stays reachable over time.
+
+Run the macOS stability client:
+
+```sh
+open -W -n .DerivedData/Build/Products/Debug/mac2visionOS.app \
+  --stdout /private/tmp/mac2vision-stability.out \
+  --stderr /private/tmp/mac2vision-stability.err \
+  --args --bubble-stability-client AVP1
+```
+
+Expected output includes:
+
+```text
+[BubbleStability] Sending ping 1/5
+[BubbleStability] Received acknowledgement 5/5
+[BubbleStability] Stable connection passed: 5/5 acknowledgements
+```
+
 ## Runtime Diagnostics
 
 The app surfaces runtime diagnostics in the UI. Use those first for:

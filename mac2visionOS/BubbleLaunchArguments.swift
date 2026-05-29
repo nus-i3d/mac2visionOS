@@ -3,6 +3,7 @@ import Foundation
 enum BubbleLaunchArguments {
     static let smokeHostFlag = "--bubble-smoke-host"
     static let smokeClientFlag = "--bubble-smoke-client"
+    static let stabilityClientFlag = "--bubble-stability-client"
 
     static func value(after flag: String) -> String? {
         let arguments = ProcessInfo.processInfo.arguments
@@ -12,4 +13,3 @@ enum BubbleLaunchArguments {
         return BubbleProtocol.normalizedKey(arguments[index + 1])
     }
 }
-

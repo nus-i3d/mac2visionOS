@@ -12,7 +12,9 @@ struct ContentView: View {
         #if os(visionOS)
         BubbleHostView()
         #elseif os(macOS)
-        if let key = BubbleLaunchArguments.value(after: BubbleLaunchArguments.smokeClientFlag) {
+        if let key = BubbleLaunchArguments.value(after: BubbleLaunchArguments.stabilityClientFlag) {
+            BubbleStabilityClientView(groupKey: key)
+        } else if let key = BubbleLaunchArguments.value(after: BubbleLaunchArguments.smokeClientFlag) {
             BubbleSmokeClientView(groupKey: key)
         } else {
             BubbleControllerView()
