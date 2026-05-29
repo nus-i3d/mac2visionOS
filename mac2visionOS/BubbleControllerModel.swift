@@ -12,19 +12,18 @@ struct DiscoveredBubbleHost: Identifiable, Equatable {
 
 @MainActor
 final class BubbleControllerModel: ObservableObject {
-    @Published var groupKey = "AVP1" {
-        didSet {
-            groupKey = BubbleProtocol.normalizedKey(groupKey)
-        }
-    }
+    @Published var groupKey = "AVP1"
     @Published var status = "Idle"
     @Published var discoveredHosts: [DiscoveredBubbleHost] = []
     @Published var selectedHostID: String?
     @Published var log: [String] = []
+    @Published var diagnostics: [String] = []
+    @Published var harnessResult = "Not run"
 
     private let peerID = UUID()
     private var browser: NWBrowser?
     private var connection: BubblePeerConnection?
+    private var harness: BubbleFourClientHarness?
 
     var isConnected: Bool {
         status == "Connected"
@@ -35,8 +34,12 @@ final class BubbleControllerModel: ObservableObject {
         discoveredHosts.removeAll()
         selectedHostID = nil
 
-        guard BubbleProtocol.isValidKey(groupKey) else {
+        let key = BubbleProtocol.normalizedKey(groupKey)
+        groupKey = key
+
+        guard BubbleProtocol.isValidKey(key) else {
             status = "Enter a 4-character key"
+            appendDiagnostic("Rejected browse: invalid key")
             return
         }
 
@@ -53,6 +56,7 @@ final class BubbleControllerModel: ObservableObject {
             }
         }
         self.browser = browser
+        appendDiagnostic("Browsing for \(BubbleProtocol.serviceName(for: key)) \(BubbleProtocol.serviceType)")
         browser.start(queue: .global(qos: .userInitiated))
     }
 
@@ -70,6 +74,9 @@ final class BubbleControllerModel: ObservableObject {
         peer.onStateChange = { [weak self] state in
             self?.updateConnectionState(state)
         }
+        peer.onEvent = { [weak self] event in
+            self?.appendDiagnostic(event)
+        }
         peer.start()
     }
 
@@ -79,6 +86,7 @@ final class BubbleControllerModel: ObservableObject {
         browser?.cancel()
         browser = nil
         status = "Idle"
+        appendDiagnostic("Disconnected")
     }
 
     func send(_ action: BubbleAction) {
@@ -97,6 +105,29 @@ final class BubbleControllerModel: ObservableObject {
         connection.send(.command(command))
         log.insert("Sent \(action.title)", at: 0)
         log = Array(log.prefix(40))
+        appendDiagnostic("Sent \(action.rawValue)")
+    }
+
+    func runFourClientLocalCheck() {
+        harness?.stop()
+        harnessResult = "Running..."
+        appendDiagnostic("Starting local 4-client harness")
+
+        let harness = BubbleFourClientHarness(groupKey: BubbleProtocol.normalizedKey(groupKey))
+        self.harness = harness
+        harness.run { [weak self] result in
+            Task { @MainActor [weak self] in
+                switch result {
+                case .success(let detail):
+                    self?.harnessResult = detail
+                    self?.appendDiagnostic(detail)
+                case .failure(let error):
+                    self?.harnessResult = "Failed: \(error.localizedDescription)"
+                    self?.appendDiagnostic("Harness failed: \(error.localizedDescription)")
+                }
+                self?.harness = nil
+            }
+        }
     }
 
     private func updateBrowseResults(_ results: Set<NWBrowser.Result>) {
@@ -110,6 +141,7 @@ final class BubbleControllerModel: ObservableObject {
         .sorted { $0.name < $1.name }
 
         discoveredHosts = hosts
+        appendDiagnostic("Browse result count: \(hosts.count)")
 
         if selectedHostID == nil, let first = hosts.first {
             selectedHostID = first.id
@@ -122,6 +154,7 @@ final class BubbleControllerModel: ObservableObject {
             status = "Preparing browser"
         case .ready:
             status = "Browsing for \(BubbleProtocol.serviceName(for: groupKey))"
+            appendDiagnostic(status)
         case .waiting(let error):
             status = "Waiting: \(error.localizedDescription)"
         case .failed(let error):
@@ -145,6 +178,7 @@ final class BubbleControllerModel: ObservableObject {
             status = "Preparing"
         case .ready:
             status = "Connected"
+            appendDiagnostic("Connected; sending hello")
             sendHello()
         case .failed(let error):
             status = "Connection failed: \(error.localizedDescription)"
@@ -173,6 +207,12 @@ final class BubbleControllerModel: ObservableObject {
 
         log.insert(acknowledgement.detail, at: 0)
         log = Array(log.prefix(40))
+        appendDiagnostic("Received acknowledgement: \(acknowledgement.detail)")
+    }
+
+    private func appendDiagnostic(_ message: String) {
+        diagnostics.insert(message, at: 0)
+        diagnostics = Array(diagnostics.prefix(80))
     }
 }
 #endif

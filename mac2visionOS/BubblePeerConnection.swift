@@ -8,6 +8,7 @@ final class BubblePeerConnection {
 
     var onMessage: ((BubbleMessage) -> Void)?
     var onStateChange: ((NWConnection.State) -> Void)?
+    var onEvent: ((String) -> Void)?
 
     private var pendingData = Data()
     private let encoder = JSONEncoder()
@@ -20,8 +21,10 @@ final class BubblePeerConnection {
     }
 
     func start() {
+        onEvent?("Starting connection to \(connection.endpoint.debugDescription)")
         connection.stateUpdateHandler = { [weak self] state in
             Task { @MainActor [weak self] in
+                self?.onEvent?("Connection state: \(state.eventDescription)")
                 self?.onStateChange?(state)
             }
         }
@@ -33,6 +36,7 @@ final class BubblePeerConnection {
         do {
             var payload = try encoder.encode(message)
             payload.append(0x0A)
+            onEvent?("Sending \(message.eventDescription)")
             connection.send(content: payload, completion: .contentProcessed { _ in })
         } catch {
             report(error)
@@ -49,6 +53,7 @@ final class BubblePeerConnection {
                 guard let self else { return }
 
                 if let content, !content.isEmpty {
+                    self.onEvent?("Received \(content.count) bytes")
                     self.pendingData.append(content)
                     self.drainMessages()
                 }
@@ -77,8 +82,10 @@ final class BubblePeerConnection {
 
             do {
                 let message = try decoder.decode(BubbleMessage.self, from: Data(frame))
+                onEvent?("Decoded \(message.eventDescription)")
                 onMessage?(message)
             } catch {
+                onEvent?("Decode failed: \(error.localizedDescription)")
                 report(error)
             }
         }
@@ -89,6 +96,40 @@ final class BubblePeerConnection {
             onStateChange?(.failed(error))
         } else {
             onStateChange?(.failed(.posix(.EPROTO)))
+        }
+    }
+}
+
+private extension BubbleMessage {
+    var eventDescription: String {
+        switch self {
+        case .hello(let hello):
+            "hello(\(hello.displayName), \(hello.groupKey))"
+        case .command(let command):
+            "command(\(command.action.rawValue), \(command.groupKey))"
+        case .acknowledgement(let acknowledgement):
+            "ack(\(acknowledgement.accepted), \(acknowledgement.detail))"
+        }
+    }
+}
+
+private extension NWConnection.State {
+    var eventDescription: String {
+        switch self {
+        case .setup:
+            "setup"
+        case .waiting(let error):
+            "waiting(\(error.localizedDescription))"
+        case .preparing:
+            "preparing"
+        case .ready:
+            "ready"
+        case .failed(let error):
+            "failed(\(error.localizedDescription))"
+        case .cancelled:
+            "cancelled"
+        @unknown default:
+            "unknown"
         }
     }
 }

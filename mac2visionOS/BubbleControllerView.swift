@@ -62,12 +62,27 @@ struct BubbleControllerView: View {
                     }
                 }
 
+                HStack {
+                    Button("Run 4-Client Check") {
+                        model.runFourClientLocalCheck()
+                    }
+                    Text(model.harnessResult)
+                        .foregroundStyle(.secondary)
+                }
+
                 Divider()
 
                 Text("Log")
                     .font(.headline)
                 List(model.log, id: \.self) { entry in
                     Text(entry)
+                }
+
+                Text("Diagnostics")
+                    .font(.headline)
+                List(model.diagnostics, id: \.self) { entry in
+                    Text(entry)
+                        .font(.caption)
                 }
             }
             .padding(24)

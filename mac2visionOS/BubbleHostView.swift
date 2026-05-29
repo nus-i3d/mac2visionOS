@@ -49,6 +49,18 @@ struct BubbleHostView: View {
                         }
                     }
                 }
+
+                Section("Diagnostics") {
+                    if model.diagnostics.isEmpty {
+                        Text("No diagnostics")
+                            .foregroundStyle(.secondary)
+                    } else {
+                        ForEach(model.diagnostics, id: \.self) { event in
+                            Text(event)
+                                .font(.caption)
+                        }
+                    }
+                }
             }
             .navigationTitle("Vision Bubble Host")
         }

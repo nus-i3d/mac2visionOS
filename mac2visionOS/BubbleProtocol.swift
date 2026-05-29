@@ -5,7 +5,7 @@ enum BubbleProtocol {
     static let servicePrefix = "mac2visionOS"
 
     static func normalizedKey(_ key: String) -> String {
-        key.uppercased().filter { $0.isLetter || $0.isNumber }.prefix(4).description
+        String(key.uppercased().filter { $0.isLetter || $0.isNumber }.prefix(4))
     }
 
     static func serviceName(for key: String) -> String {
@@ -122,4 +122,3 @@ enum BubbleMessage: Codable, Identifiable, Equatable {
         }
     }
 }
-
