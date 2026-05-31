@@ -15,6 +15,7 @@ public final class BubbleHostModel: ObservableObject {
     @Published public var groupKey = "AVP1"
     @Published public var status = "Stopped"
     @Published public var clients: [ConnectedBubbleClient] = []
+    @Published public var latestCommand = "No command received"
     @Published public var receivedCommands: [String] = []
     @Published public var diagnostics: [String] = []
 
@@ -159,7 +160,9 @@ public final class BubbleHostModel: ObservableObject {
 
         case .command(let command):
             let sender = clientHelloByConnectionID[peer.id]?.displayName ?? command.senderID.uuidString
+            let receivedCommand = handle(command.action)
             let detail = "\(sender): \(command.action.title)"
+            latestCommand = receivedCommand
             receivedCommands.insert(detail, at: 0)
             receivedCommands = Array(receivedCommands.prefix(40))
             appendDiagnostic("Received \(command.action.rawValue) from \(sender)")
@@ -175,6 +178,43 @@ public final class BubbleHostModel: ObservableObject {
         case .acknowledgement:
             break
         }
+    }
+
+    private func handle(_ action: BubbleAction) -> String {
+        let commandName: String
+
+        switch action {
+        case .ping:
+            commandName = "ping"
+            print("ping")
+            // Insert ping logic here.
+        case .moveLeft:
+            commandName = "left"
+            print("left")
+            // Insert left movement logic here.
+        case .moveRight:
+            commandName = "right"
+            print("right")
+            // Insert right movement logic here.
+        case .moveUp:
+            commandName = "up"
+            print("up")
+            // Insert up movement logic here.
+        case .moveDown:
+            commandName = "down"
+            print("down")
+            // Insert down movement logic here.
+        case .select:
+            commandName = "select"
+            print("select")
+            // Insert select logic here.
+        case .reset:
+            commandName = "reset"
+            print("reset")
+            // Insert reset logic here.
+        }
+
+        return commandName
     }
 
     private func updateListenerState(_ state: NWListener.State, listenerID: UUID) {

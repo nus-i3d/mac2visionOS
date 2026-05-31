@@ -44,6 +44,10 @@ struct BubbleHostView: View {
                 }
 
                 Section("Commands") {
+                    TextField("Latest command", text: .constant(model.latestCommand))
+                        .textFieldStyle(.roundedBorder)
+                        .disabled(true)
+
                     if model.receivedCommands.isEmpty {
                         Text("No commands received")
                             .foregroundStyle(.secondary)
