@@ -3,20 +3,20 @@ import Combine
 import Foundation
 @preconcurrency import Network
 
-struct ConnectedBubbleClient: Identifiable, Equatable {
-    let id: UUID
-    var displayName: String
-    var endpoint: String
-    var state: String
+public struct ConnectedBubbleClient: Identifiable, Equatable {
+    public let id: UUID
+    public var displayName: String
+    public var endpoint: String
+    public var state: String
 }
 
 @MainActor
-final class BubbleHostModel: ObservableObject {
-    @Published var groupKey = "AVP1"
-    @Published var status = "Stopped"
-    @Published var clients: [ConnectedBubbleClient] = []
-    @Published var receivedCommands: [String] = []
-    @Published var diagnostics: [String] = []
+public final class BubbleHostModel: ObservableObject {
+    @Published public var groupKey = "AVP1"
+    @Published public var status = "Stopped"
+    @Published public var clients: [ConnectedBubbleClient] = []
+    @Published public var receivedCommands: [String] = []
+    @Published public var diagnostics: [String] = []
 
     private var listener: NWListener?
     private var connections: [UUID: BubblePeerConnection] = [:]
@@ -26,7 +26,9 @@ final class BubbleHostModel: ObservableObject {
     private var listenerID: UUID?
     private var restartTask: Task<Void, Never>?
 
-    func applyLaunchAutomationIfNeeded() {
+    public init() {}
+
+    public func applyLaunchAutomationIfNeeded() {
         guard !didApplyLaunchAutomation else { return }
         didApplyLaunchAutomation = true
 
@@ -39,7 +41,7 @@ final class BubbleHostModel: ObservableObject {
         start()
     }
 
-    func start() {
+    public func start() {
         let key = BubbleProtocol.normalizedKey(groupKey)
         groupKey = key
 
@@ -56,7 +58,7 @@ final class BubbleHostModel: ObservableObject {
         startListener(for: key)
     }
 
-    func stop() {
+    public func stop() {
         desiredHostKey = nil
         restartTask?.cancel()
         restartTask = nil

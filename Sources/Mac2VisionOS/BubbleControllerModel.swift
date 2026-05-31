@@ -4,32 +4,34 @@ import Combine
 import Foundation
 @preconcurrency import Network
 
-struct DiscoveredBubbleHost: Identifiable, Equatable {
-    let id: String
-    let name: String
-    let endpoint: NWEndpoint
+public struct DiscoveredBubbleHost: Identifiable, Equatable {
+    public let id: String
+    public let name: String
+    public let endpoint: NWEndpoint
 }
 
 @MainActor
-final class BubbleControllerModel: ObservableObject {
-    @Published var groupKey = "AVP1"
-    @Published var status = "Idle"
-    @Published var discoveredHosts: [DiscoveredBubbleHost] = []
-    @Published var selectedHostID: String?
-    @Published var log: [String] = []
-    @Published var diagnostics: [String] = []
-    @Published var harnessResult = "Not run"
+public final class BubbleControllerModel: ObservableObject {
+    @Published public var groupKey = "AVP1"
+    @Published public var status = "Idle"
+    @Published public var discoveredHosts: [DiscoveredBubbleHost] = []
+    @Published public var selectedHostID: String?
+    @Published public var log: [String] = []
+    @Published public var diagnostics: [String] = []
+    @Published public var harnessResult = "Not run"
 
     private let peerID = UUID()
     private var browser: NWBrowser?
     private var connection: BubblePeerConnection?
     private var harness: BubbleFourClientHarness?
 
-    var isConnected: Bool {
+    public init() {}
+
+    public var isConnected: Bool {
         status == "Connected"
     }
 
-    func browse() {
+    public func browse() {
         disconnect()
         discoveredHosts.removeAll()
         selectedHostID = nil
@@ -60,7 +62,7 @@ final class BubbleControllerModel: ObservableObject {
         browser.start(queue: .global(qos: .userInitiated))
     }
 
-    func connect(to host: DiscoveredBubbleHost) {
+    public func connect(to host: DiscoveredBubbleHost) {
         connection?.cancel()
 
         let peer = BubblePeerConnection(connection: NWConnection(to: host.endpoint, using: .tcp))
@@ -80,7 +82,7 @@ final class BubbleControllerModel: ObservableObject {
         peer.start()
     }
 
-    func disconnect() {
+    public func disconnect() {
         connection?.cancel()
         connection = nil
         browser?.cancel()
@@ -89,7 +91,7 @@ final class BubbleControllerModel: ObservableObject {
         appendDiagnostic("Disconnected")
     }
 
-    func send(_ action: BubbleAction) {
+    public func send(_ action: BubbleAction) {
         guard let connection else {
             log.insert("No active connection", at: 0)
             return
@@ -108,7 +110,7 @@ final class BubbleControllerModel: ObservableObject {
         appendDiagnostic("Sent \(action.rawValue)")
     }
 
-    func runFourClientLocalCheck() {
+    public func runFourClientLocalCheck() {
         harness?.stop()
         harnessResult = "Running..."
         appendDiagnostic("Starting local 4-client harness")

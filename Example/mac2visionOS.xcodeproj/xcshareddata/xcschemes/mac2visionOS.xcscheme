@@ -3,7 +3,7 @@
    LastUpgradeVersion = "2620"
    version = "1.7">
    <BuildAction
-      parallelizeBuildables = "YES"
+      parallelizeBuildables = "NO"
       buildImplicitDependencies = "YES"
       buildArchitectures = "Automatic">
       <BuildActionEntries>
@@ -17,7 +17,7 @@
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "93429CD72FC9DF4600970C44"
                BuildableName = "mac2visionOS.app"
-               BlueprintName = "mac2visionOS"
+               BlueprintName = "Mac2VisionOSExample"
                ReferencedContainer = "container:mac2visionOS.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -46,7 +46,7 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "93429CD72FC9DF4600970C44"
             BuildableName = "mac2visionOS.app"
-            BlueprintName = "mac2visionOS"
+               BlueprintName = "Mac2VisionOSExample"
             ReferencedContainer = "container:mac2visionOS.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
@@ -63,7 +63,7 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "93429CD72FC9DF4600970C44"
             BuildableName = "mac2visionOS.app"
-            BlueprintName = "mac2visionOS"
+            BlueprintName = "Mac2VisionOSExample"
             ReferencedContainer = "container:mac2visionOS.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>

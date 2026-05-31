@@ -5,9 +5,9 @@ import Foundation
 @preconcurrency import Network
 
 @MainActor
-final class BubbleSmokeClientModel: ObservableObject {
-    @Published var status = "Starting"
-    @Published var events: [String] = []
+public final class BubbleSmokeClientModel: ObservableObject {
+    @Published public var status = "Starting"
+    @Published public var events: [String] = []
 
     private let groupKey: String
     private let peerID = UUID()
@@ -15,11 +15,11 @@ final class BubbleSmokeClientModel: ObservableObject {
     private var connection: BubblePeerConnection?
     private var didFinish = false
 
-    init(groupKey: String) {
+    public init(groupKey: String) {
         self.groupKey = BubbleProtocol.normalizedKey(groupKey)
     }
 
-    func start() {
+    public func start() {
         guard BubbleProtocol.isValidKey(groupKey) else {
             finish(success: false, message: "Invalid smoke key: \(groupKey)")
             return
@@ -162,4 +162,3 @@ final class BubbleSmokeClientModel: ObservableObject {
     }
 }
 #endif
-

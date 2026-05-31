@@ -5,9 +5,9 @@ import Foundation
 @preconcurrency import Network
 
 @MainActor
-final class BubbleStabilityClientModel: ObservableObject {
-    @Published var status = "Starting"
-    @Published var events: [String] = []
+public final class BubbleStabilityClientModel: ObservableObject {
+    @Published public var status = "Starting"
+    @Published public var events: [String] = []
 
     private let groupKey: String
     private let peerID = UUID()
@@ -21,11 +21,11 @@ final class BubbleStabilityClientModel: ObservableObject {
     private var expectedAckIDs: [UUID] = []
     private var receivedAckIDs = Set<UUID>()
 
-    init(groupKey: String) {
+    public init(groupKey: String) {
         self.groupKey = BubbleProtocol.normalizedKey(groupKey)
     }
 
-    func start() {
+    public func start() {
         guard BubbleProtocol.isValidKey(groupKey) else {
             finish(success: false, message: "Invalid stability key: \(groupKey)")
             return

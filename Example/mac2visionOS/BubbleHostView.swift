@@ -1,5 +1,6 @@
 #if os(visionOS)
 import SwiftUI
+import Mac2VisionOS
 
 struct BubbleHostView: View {
     @StateObject private var model = BubbleHostModel()

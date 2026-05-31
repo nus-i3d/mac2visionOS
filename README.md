@@ -1,11 +1,33 @@
 # mac2visionOS
 
-Prototype for a macOS controller app talking to a visionOS host app over the local network.
+Swift package and example app for a macOS controller talking to a visionOS host app over the local network.
+
+## Swift Package
+
+The reusable protocol, Bonjour/networking, and observable model layer lives in `Sources/Mac2VisionOS`.
+
+Add the package in Xcode with **File > Add Package Dependencies...**, paste this repository URL, and select the `Mac2VisionOS` library product. Then import it from your app:
+
+```swift
+import Mac2VisionOS
+```
+
+The package exposes the core bubble protocol types, peer connection helper, host/controller models, and local smoke/stability harness models. Consuming apps still own their app-level permissions. At minimum, add these to the app target using the package:
+
+- `NSBonjourServices` with `_m2vo._tcp`
+- `NSLocalNetworkUsageDescription`
+- macOS sandbox network client/server entitlements when sandboxing is enabled
+
+The example app in `Example/` shows those settings in `Example/Config/Info.plist` and `Example/Config/mac2visionOS.entitlements`.
+
+## Example App
 
 The current app uses one multi-platform Xcode scheme:
 
 - Run on **visionOS / Apple Vision Pro** to host the shared bubble.
 - Run on **macOS / My Mac** to act as a controller.
+
+Open `Example/mac2visionOS.xcworkspace` in Xcode. The app target imports the local package from the repository root.
 
 ## Manual Simulator Test
 
@@ -15,7 +37,7 @@ Use these steps when validating the macOS <> visionOS flow manually.
 
 ```sh
 xcodebuild -showdestinations \
-  -project mac2visionOS.xcodeproj \
+  -workspace Example/mac2visionOS.xcworkspace \
   -scheme mac2visionOS
 ```
 
@@ -38,7 +60,7 @@ Replace `<DEVICE_ID>` with the Apple Vision Pro simulator ID from `simctl`.
 
 ```sh
 xcodebuild build \
-  -project mac2visionOS.xcodeproj \
+  -workspace Example/mac2visionOS.xcworkspace \
   -scheme mac2visionOS \
   -destination 'id=<DEVICE_ID>' \
   -derivedDataPath .DerivedData \
@@ -49,7 +71,7 @@ If direct simulator targeting is unavailable, this generic build is still useful
 
 ```sh
 xcodebuild build \
-  -project mac2visionOS.xcodeproj \
+  -workspace Example/mac2visionOS.xcworkspace \
   -scheme mac2visionOS \
   -destination 'generic/platform=visionOS Simulator' \
   -derivedDataPath .DerivedData \
@@ -73,7 +95,7 @@ The launch command prints a process ID when successful.
 
 ```sh
 xcodebuild build \
-  -project mac2visionOS.xcodeproj \
+  -workspace Example/mac2visionOS.xcworkspace \
   -scheme mac2visionOS \
   -destination 'platform=macOS' \
   -derivedDataPath .DerivedData \
@@ -220,6 +242,6 @@ log stream \
 
 ## Notes
 
-- The project currently has no configured test target/action, so `xcodebuild test` reports that the scheme is not configured for testing.
+- Run package tests from the repository root with `swift test`.
 - Some automation environments cannot access CoreSimulator from a sandbox. If `simctl` or direct simulator `xcodebuild` commands fail with CoreSimulator connection errors, rerun them with the needed host permissions or perform the simulator steps manually in Xcode.
 - Leave unrelated Xcode user/scheme metadata unstaged unless intentionally changing scheme configuration.

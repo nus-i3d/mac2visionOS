@@ -1,5 +1,6 @@
 #if os(macOS)
 import SwiftUI
+import Mac2VisionOS
 
 struct BubbleControllerView: View {
     @StateObject private var model = BubbleControllerModel()

@@ -1,5 +1,6 @@
 #if os(macOS)
 import SwiftUI
+import Mac2VisionOS
 
 struct BubbleStabilityClientView: View {
     @StateObject private var model: BubbleStabilityClientModel

@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Mac2VisionOS
 
 struct ContentView: View {
     var body: some View {

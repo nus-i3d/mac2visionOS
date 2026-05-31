@@ -1,28 +1,28 @@
 import Foundation
 
-enum BubbleProtocol {
-    static let serviceType = "_m2vo._tcp"
-    static let servicePrefix = "mac2visionOS"
+public enum BubbleProtocol {
+    public static let serviceType = "_m2vo._tcp"
+    public static let servicePrefix = "mac2visionOS"
 
-    static func normalizedKey(_ key: String) -> String {
+    public static func normalizedKey(_ key: String) -> String {
         String(key.uppercased().filter { $0.isLetter || $0.isNumber }.prefix(4))
     }
 
-    static func serviceName(for key: String) -> String {
+    public static func serviceName(for key: String) -> String {
         "\(servicePrefix)-\(normalizedKey(key))"
     }
 
-    static func isValidKey(_ key: String) -> Bool {
+    public static func isValidKey(_ key: String) -> Bool {
         normalizedKey(key).count == 4
     }
 }
 
-enum BubbleRole: String, Codable {
+public enum BubbleRole: String, Codable {
     case visionHost
     case macController
 }
 
-enum BubbleAction: String, CaseIterable, Codable, Identifiable {
+public enum BubbleAction: String, CaseIterable, Codable, Identifiable {
     case ping
     case moveLeft
     case moveRight
@@ -31,9 +31,9 @@ enum BubbleAction: String, CaseIterable, Codable, Identifiable {
     case select
     case reset
 
-    var id: String { rawValue }
+    public var id: String { rawValue }
 
-    var title: String {
+    public var title: String {
         switch self {
         case .ping: "Ping"
         case .moveLeft: "Left"
@@ -46,35 +46,58 @@ enum BubbleAction: String, CaseIterable, Codable, Identifiable {
     }
 }
 
-struct BubblePeerHello: Codable, Identifiable, Equatable {
-    let id: UUID
-    let displayName: String
-    let groupKey: String
-    let role: BubbleRole
+public struct BubblePeerHello: Codable, Identifiable, Equatable {
+    public let id: UUID
+    public let displayName: String
+    public let groupKey: String
+    public let role: BubbleRole
+
+    public init(id: UUID, displayName: String, groupKey: String, role: BubbleRole) {
+        self.id = id
+        self.displayName = displayName
+        self.groupKey = groupKey
+        self.role = role
+    }
 }
 
-struct BubbleCommand: Codable, Identifiable, Equatable {
-    let id: UUID
-    let senderID: UUID
-    let groupKey: String
-    let action: BubbleAction
-    let sentAt: Date
+public struct BubbleCommand: Codable, Identifiable, Equatable {
+    public let id: UUID
+    public let senderID: UUID
+    public let groupKey: String
+    public let action: BubbleAction
+    public let sentAt: Date
+
+    public init(id: UUID, senderID: UUID, groupKey: String, action: BubbleAction, sentAt: Date) {
+        self.id = id
+        self.senderID = senderID
+        self.groupKey = groupKey
+        self.action = action
+        self.sentAt = sentAt
+    }
 }
 
-struct BubbleAcknowledgement: Codable, Identifiable, Equatable {
-    let id: UUID
-    let messageID: UUID
-    let accepted: Bool
-    let detail: String
-    let sentAt: Date
+public struct BubbleAcknowledgement: Codable, Identifiable, Equatable {
+    public let id: UUID
+    public let messageID: UUID
+    public let accepted: Bool
+    public let detail: String
+    public let sentAt: Date
+
+    public init(id: UUID, messageID: UUID, accepted: Bool, detail: String, sentAt: Date) {
+        self.id = id
+        self.messageID = messageID
+        self.accepted = accepted
+        self.detail = detail
+        self.sentAt = sentAt
+    }
 }
 
-enum BubbleMessage: Codable, Identifiable, Equatable {
+public enum BubbleMessage: Codable, Identifiable, Equatable {
     case hello(BubblePeerHello)
     case command(BubbleCommand)
     case acknowledgement(BubbleAcknowledgement)
 
-    var id: UUID {
+    public var id: UUID {
         switch self {
         case .hello(let hello): hello.id
         case .command(let command): command.id
@@ -95,7 +118,7 @@ enum BubbleMessage: Codable, Identifiable, Equatable {
         case acknowledgement
     }
 
-    init(from decoder: Decoder) throws {
+    public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         switch try container.decode(MessageType.self, forKey: .type) {
         case .hello:
@@ -107,7 +130,7 @@ enum BubbleMessage: Codable, Identifiable, Equatable {
         }
     }
 
-    func encode(to encoder: Encoder) throws {
+    public func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         switch self {
         case .hello(let hello):

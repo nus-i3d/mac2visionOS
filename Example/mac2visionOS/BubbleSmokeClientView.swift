@@ -1,5 +1,6 @@
 #if os(macOS)
 import SwiftUI
+import Mac2VisionOS
 
 struct BubbleSmokeClientView: View {
     @StateObject private var model: BubbleSmokeClientModel

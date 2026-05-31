@@ -2,25 +2,25 @@ import Foundation
 @preconcurrency import Network
 
 @MainActor
-final class BubblePeerConnection {
-    let id = UUID()
-    let connection: NWConnection
+public final class BubblePeerConnection {
+    public let id = UUID()
+    public let connection: NWConnection
 
-    var onMessage: ((BubbleMessage) -> Void)?
-    var onStateChange: ((NWConnection.State) -> Void)?
-    var onEvent: ((String) -> Void)?
+    public var onMessage: ((BubbleMessage) -> Void)?
+    public var onStateChange: ((NWConnection.State) -> Void)?
+    public var onEvent: ((String) -> Void)?
 
     private var pendingData = Data()
     private let encoder = JSONEncoder()
     private let decoder = JSONDecoder()
 
-    init(connection: NWConnection) {
+    public init(connection: NWConnection) {
         self.connection = connection
         encoder.dateEncodingStrategy = .iso8601
         decoder.dateDecodingStrategy = .iso8601
     }
 
-    func start() {
+    public func start() {
         onEvent?("Starting connection to \(connection.endpoint.debugDescription)")
         connection.stateUpdateHandler = { [weak self] state in
             Task { @MainActor [weak self] in
@@ -32,7 +32,7 @@ final class BubblePeerConnection {
         connection.start(queue: .global(qos: .userInitiated))
     }
 
-    func send(_ message: BubbleMessage) {
+    public func send(_ message: BubbleMessage) {
         do {
             var payload = try encoder.encode(message)
             payload.append(0x0A)
@@ -43,7 +43,7 @@ final class BubblePeerConnection {
         }
     }
 
-    func cancel() {
+    public func cancel() {
         connection.cancel()
     }
 

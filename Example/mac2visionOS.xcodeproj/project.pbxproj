@@ -7,31 +7,47 @@
 	objects = {
 
 /* Begin PBXFileReference section */
+		A00000000000000000000001 /* Package.swift */ = {isa = PBXFileReference; lastKnownFileType = text; path = ../Package.swift; sourceTree = "<group>"; };
+		A10000000000000000000001 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		A10000000000000000000002 /* mac2visionOSApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = mac2visionOSApp.swift; sourceTree = "<group>"; };
+		A10000000000000000000003 /* BubbleHostView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BubbleHostView.swift; sourceTree = "<group>"; };
+		A10000000000000000000004 /* BubbleControllerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BubbleControllerView.swift; sourceTree = "<group>"; };
+		A10000000000000000000005 /* BubbleSmokeClientView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BubbleSmokeClientView.swift; sourceTree = "<group>"; };
+		A10000000000000000000006 /* BubbleStabilityClientView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BubbleStabilityClientView.swift; sourceTree = "<group>"; };
+		A10000000000000000000007 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		93429CD82FC9DF4600970C44 /* mac2visionOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = mac2visionOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
-/* Begin PBXFileSystemSynchronizedRootGroup section */
+/* Begin PBXBuildFile section */
+		A00000000000000000000002 /* Mac2VisionOS in Frameworks */ = {isa = PBXBuildFile; productRef = A00000000000000000000003 /* Mac2VisionOS */; };
+		A20000000000000000000001 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000000000000000000001 /* ContentView.swift */; };
+		A20000000000000000000002 /* mac2visionOSApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000000000000000000002 /* mac2visionOSApp.swift */; };
+		A20000000000000000000003 /* BubbleHostView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000000000000000000003 /* BubbleHostView.swift */; };
+		A20000000000000000000004 /* BubbleControllerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000000000000000000004 /* BubbleControllerView.swift */; };
+		A20000000000000000000005 /* BubbleSmokeClientView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000000000000000000005 /* BubbleSmokeClientView.swift */; };
+		A20000000000000000000006 /* BubbleStabilityClientView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000000000000000000006 /* BubbleStabilityClientView.swift */; };
+		A20000000000000000000007 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A10000000000000000000007 /* Assets.xcassets */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXGroup section */
 		93429CDA2FC9DF4600970C44 /* mac2visionOS */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
+			isa = PBXGroup;
+			children = (
+				A10000000000000000000007 /* Assets.xcassets */,
+				A10000000000000000000004 /* BubbleControllerView.swift */,
+				A10000000000000000000003 /* BubbleHostView.swift */,
+				A10000000000000000000005 /* BubbleSmokeClientView.swift */,
+				A10000000000000000000006 /* BubbleStabilityClientView.swift */,
+				A10000000000000000000001 /* ContentView.swift */,
+				A10000000000000000000002 /* mac2visionOSApp.swift */,
+			);
 			path = mac2visionOS;
 			sourceTree = "<group>";
 		};
-/* End PBXFileSystemSynchronizedRootGroup section */
-
-/* Begin PBXFrameworksBuildPhase section */
-		93429CD52FC9DF4600970C44 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXFrameworksBuildPhase section */
-
-/* Begin PBXGroup section */
 		93429CCF2FC9DF4600970C44 = {
 			isa = PBXGroup;
 			children = (
+				A00000000000000000000001 /* Package.swift */,
 				93429CDA2FC9DF4600970C44 /* mac2visionOS */,
 				93429CD92FC9DF4600970C44 /* Products */,
 			);
@@ -47,10 +63,21 @@
 		};
 /* End PBXGroup section */
 
+/* Begin PBXFrameworksBuildPhase section */
+		93429CD52FC9DF4600970C44 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A00000000000000000000002 /* Mac2VisionOS in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
 /* Begin PBXNativeTarget section */
-		93429CD72FC9DF4600970C44 /* mac2visionOS */ = {
+		93429CD72FC9DF4600970C44 /* Mac2VisionOSExample */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 93429CE32FC9DF4600970C44 /* Build configuration list for PBXNativeTarget "mac2visionOS" */;
+			buildConfigurationList = 93429CE32FC9DF4600970C44 /* Build configuration list for PBXNativeTarget "Mac2VisionOSExample" */;
 			buildPhases = (
 				93429CD42FC9DF4600970C44 /* Sources */,
 				93429CD52FC9DF4600970C44 /* Frameworks */,
@@ -60,11 +87,9 @@
 			);
 			dependencies = (
 			);
-			fileSystemSynchronizedGroups = (
-				93429CDA2FC9DF4600970C44 /* mac2visionOS */,
-			);
-			name = mac2visionOS;
+			name = Mac2VisionOSExample;
 			packageProductDependencies = (
+				A00000000000000000000003 /* Mac2VisionOS */,
 			);
 			productName = mac2visionOS;
 			productReference = 93429CD82FC9DF4600970C44 /* mac2visionOS.app */;
@@ -94,12 +119,15 @@
 			);
 			mainGroup = 93429CCF2FC9DF4600970C44;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				A00000000000000000000004 /* XCLocalSwiftPackageReference "." */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 93429CD92FC9DF4600970C44 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				93429CD72FC9DF4600970C44 /* mac2visionOS */,
+				93429CD72FC9DF4600970C44 /* Mac2VisionOSExample */,
 			);
 		};
 /* End PBXProject section */
@@ -109,6 +137,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A20000000000000000000007 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -119,6 +148,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A20000000000000000000004 /* BubbleControllerView.swift in Sources */,
+				A20000000000000000000003 /* BubbleHostView.swift in Sources */,
+				A20000000000000000000005 /* BubbleSmokeClientView.swift in Sources */,
+				A20000000000000000000006 /* BubbleStabilityClientView.swift in Sources */,
+				A20000000000000000000001 /* ContentView.swift in Sources */,
+				A20000000000000000000002 /* mac2visionOSApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -272,7 +307,8 @@
 				MACOSX_DEPLOYMENT_TARGET = 26.2;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.i3d.mac2visionOS;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_MODULE_NAME = Mac2VisionOSExample;
+				PRODUCT_NAME = mac2visionOS;
 				REGISTER_APP_GROUPS = YES;
 				SDKROOT = auto;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
@@ -280,6 +316,7 @@
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_ENABLE_EXPLICIT_MODULES = NO;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2,7";
@@ -318,7 +355,8 @@
 				MACOSX_DEPLOYMENT_TARGET = 26.2;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.i3d.mac2visionOS;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_MODULE_NAME = Mac2VisionOSExample;
+				PRODUCT_NAME = mac2visionOS;
 				REGISTER_APP_GROUPS = YES;
 				SDKROOT = auto;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
@@ -326,6 +364,7 @@
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_ENABLE_EXPLICIT_MODULES = NO;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2,7";
@@ -345,7 +384,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		93429CE32FC9DF4600970C44 /* Build configuration list for PBXNativeTarget "mac2visionOS" */ = {
+		93429CE32FC9DF4600970C44 /* Build configuration list for PBXNativeTarget "Mac2VisionOSExample" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				93429CE42FC9DF4600970C44 /* Debug */,
@@ -355,6 +394,21 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		A00000000000000000000004 /* XCLocalSwiftPackageReference "." */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ..;
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		A00000000000000000000003 /* Mac2VisionOS */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A00000000000000000000004 /* XCLocalSwiftPackageReference "." */;
+			productName = Mac2VisionOS;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 93429CD02FC9DF4600970C44 /* Project object */;
 }
