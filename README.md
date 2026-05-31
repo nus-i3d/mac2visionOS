@@ -29,6 +29,86 @@ The current app uses one multi-platform Xcode scheme:
 
 Open `Example/mac2visionOS.xcworkspace` in Xcode. The app target imports the local package from the repository root.
 
+## Build, Sign, and Generate a macOS DMG
+
+Run these commands from the repository root to create a signed macOS DMG for the example app.
+
+Build the Release app:
+
+```sh
+xcodebuild build \
+  -workspace Example/mac2visionOS.xcworkspace \
+  -scheme mac2visionOS \
+  -configuration Release \
+  -destination 'platform=macOS' \
+  -derivedDataPath /private/tmp/mac2visionOS-dmg-derived
+```
+
+Set a timestamp and staging directory:
+
+```sh
+STAMP=$(date +%Y%m%d-%H%M%S)
+STAGING="/private/tmp/mac2visionOS-dmg-staging-$STAMP"
+mkdir -p "$STAGING"
+```
+
+Copy the built app and add an Applications shortcut:
+
+```sh
+ditto \
+  /private/tmp/mac2visionOS-dmg-derived/Build/Products/Release/mac2visionOS.app \
+  "$STAGING/mac2visionOS.app"
+ln -s /Applications "$STAGING/Applications"
+```
+
+Create the DMG:
+
+```sh
+mkdir -p Releases
+hdiutil create \
+  -volname mac2visionOS \
+  -srcfolder "$STAGING" \
+  -ov \
+  -format UDZO \
+  "Releases/mac2visionOS-macOS-$STAMP.dmg"
+```
+
+Find an available signing identity:
+
+```sh
+security find-identity -v -p codesigning
+```
+
+Sign a copy of the DMG. Set `SIGNING_IDENTITY_HASH` to the hash from the previous command, for example an `Apple Development` or `Developer ID Application` identity.
+
+```sh
+SIGNING_IDENTITY_HASH="04DAF6ECC1E4291B8750C45D52B4FB8919DA9395"
+cp \
+  "Releases/mac2visionOS-macOS-$STAMP.dmg" \
+  "Releases/mac2visionOS-macOS-signed-$STAMP.dmg"
+codesign --force \
+  --sign "$SIGNING_IDENTITY_HASH" \
+  "Releases/mac2visionOS-macOS-signed-$STAMP.dmg"
+```
+
+Verify the signed DMG and app:
+
+```sh
+hdiutil verify "Releases/mac2visionOS-macOS-signed-$STAMP.dmg"
+codesign -dv --verbose=4 "Releases/mac2visionOS-macOS-signed-$STAMP.dmg"
+codesign --verify --deep --strict --verbose=2 \
+  /private/tmp/mac2visionOS-dmg-derived/Build/Products/Release/mac2visionOS.app
+```
+
+This produces:
+
+```text
+Releases/mac2visionOS-macOS-$STAMP.dmg
+Releases/mac2visionOS-macOS-signed-$STAMP.dmg
+```
+
+The signed DMG is locally signed. For public distribution outside your development machines, sign with a Developer ID certificate and notarize the DMG.
+
 ## Manual Simulator Test
 
 Use these steps when validating the macOS <> visionOS flow manually.
