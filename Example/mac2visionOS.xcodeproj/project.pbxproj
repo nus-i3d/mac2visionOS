@@ -20,6 +20,7 @@
 
 /* Begin PBXBuildFile section */
 		A00000000000000000000002 /* Mac2VisionOS in Frameworks */ = {isa = PBXBuildFile; productRef = A00000000000000000000003 /* Mac2VisionOS */; };
+		A00000000000000000000005 /* Mac2VisionOS in Embed Frameworks */ = {isa = PBXBuildFile; productRef = A00000000000000000000003 /* Mac2VisionOS */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		A20000000000000000000001 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000000000000000000001 /* ContentView.swift */; };
 		A20000000000000000000002 /* mac2visionOSApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000000000000000000002 /* mac2visionOSApp.swift */; };
 		A20000000000000000000003 /* BubbleHostView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000000000000000000003 /* BubbleHostView.swift */; };
@@ -28,6 +29,20 @@
 		A20000000000000000000006 /* BubbleStabilityClientView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000000000000000000006 /* BubbleStabilityClientView.swift */; };
 		A20000000000000000000007 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A10000000000000000000007 /* Assets.xcassets */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		A00000000000000000000006 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				A00000000000000000000005 /* Mac2VisionOS in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXGroup section */
 		93429CDA2FC9DF4600970C44 /* mac2visionOS */ = {
@@ -81,6 +96,7 @@
 			buildPhases = (
 				93429CD42FC9DF4600970C44 /* Sources */,
 				93429CD52FC9DF4600970C44 /* Frameworks */,
+				A00000000000000000000006 /* Embed Frameworks */,
 				93429CD62FC9DF4600970C44 /* Resources */,
 			);
 			buildRules = (
