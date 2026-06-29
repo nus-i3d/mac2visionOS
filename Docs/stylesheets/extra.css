@@ -1,0 +1,36 @@
+:root {
+  --m2vo-blue: #246bfd;
+  --m2vo-violet: #7357ff;
+}
+
+.md-main h1 {
+  letter-spacing: -0.035em;
+}
+
+.md-content__inner > h1:first-child {
+  font-weight: 750;
+}
+
+.feature-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  margin: 1.5rem 0 2rem;
+}
+
+.feature-card {
+  border: 1px solid color-mix(in srgb, var(--md-default-fg-color) 14%, transparent);
+  border-radius: 0.8rem;
+  padding: 1rem 1.2rem;
+  background: linear-gradient(145deg, color-mix(in srgb, var(--m2vo-blue) 7%, transparent), color-mix(in srgb, var(--m2vo-violet) 5%, transparent));
+}
+
+.feature-grid h3 {
+  margin-top: 0;
+}
+
+@media screen and (max-width: 44rem) {
+  .feature-grid {
+    grid-template-columns: 1fr;
+  }
+}

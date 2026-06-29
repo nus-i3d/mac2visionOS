@@ -1,0 +1,42 @@
+[project]
+site_name = "mac2visionOS"
+site_url = "https://careylzh.github.io/mac2visionOS/"
+site_description = "Build a local-network bridge between macOS controllers and a visionOS host."
+site_author = "careylzh"
+repo_url = "https://github.com/careylzh/mac2visionOS"
+repo_name = "careylzh/mac2visionOS"
+edit_uri = "edit/main/Docs/"
+docs_dir = "Docs"
+site_dir = "site"
+copyright = "mac2visionOS"
+nav = [
+  { "Home" = "index.md" },
+  { "Get started" = "getting-started.md" },
+  { "Architecture" = "architecture.md" },
+  { "Testing" = "testing.md" },
+]
+extra_css = ["stylesheets/extra.css"]
+
+[project.theme]
+language = "en"
+features = [
+  "navigation.instant",
+  "navigation.path",
+  "navigation.tabs",
+  "navigation.top",
+  "content.action.edit",
+  "content.action.view",
+  "content.code.copy",
+]
+
+[[project.theme.palette]]
+scheme = "default"
+primary = "indigo"
+accent = "blue"
+toggle = { icon = "lucide/moon", name = "Switch to dark mode" }
+
+[[project.theme.palette]]
+scheme = "slate"
+primary = "indigo"
+accent = "blue"
+toggle = { icon = "lucide/sun", name = "Switch to light mode" }
