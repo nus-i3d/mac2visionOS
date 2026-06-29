@@ -11,7 +11,7 @@
 In Xcode, choose **File → Add Package Dependencies**, enter:
 
 ```text
-https://github.com/careylzh/mac2visionOS
+https://github.com/nus-i3d/mac2visionOS
 ```
 
 Select the `Mac2VisionOS` library product, then import it:
